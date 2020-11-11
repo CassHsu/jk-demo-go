@@ -1,7 +1,6 @@
-pipeline {
-    agent any
-
+node {
     stage('Prepare') {
+        sh "printenv"
         echo "1.Prepare Stage"
         checkout scm
         script {
