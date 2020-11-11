@@ -5,9 +5,6 @@ node {
         checkout scm
         script {
             build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-            if (env.BRANCH_NAME != 'master') {
-                build_tag = "${env.BRANCH_NAME}-${build_tag}"
-            }
         }
     }
     stage('Test') {
@@ -26,9 +23,6 @@ node {
     }
     stage('Deploy') {
         echo "5. Deploy Stage"
-        if (env.BRANCH_NAME == 'master') {
-            input "Deplpy to Production?？"
-        }
         sh "sed -i 's/<BUILD_TAG>/${build_tag}/' k8s.yaml"
         sh "sed -i 's/<BRANCH_NAME>/${env.BRANCH_NAME}/' k8s.yaml"
         sh "kubectl apply -f k8s.yaml --record"
